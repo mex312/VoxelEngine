@@ -1,4 +1,4 @@
-#include "time.h"
+#include <VoxelEngine/systems/time.h>
 #include "../../utils/systems_internal.h"
 
 using namespace std::chrono;
@@ -24,11 +24,11 @@ namespace engine::time {
         _deltaTime = (f32) _deltaTimeD;
     }
 
-    f32 deltaTime() {
+    f32 delta_time() {
         return time::_deltaTime;
     }
 
-    f64 deltaTimeD() {
+    f64 delta_time_d() {
         return time::_deltaTimeD;
     }
 }

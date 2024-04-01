@@ -1,4 +1,4 @@
-#include "shader.h"
+#include <VoxelEngine/graphics/shader.h>
 #include "../../external/glad.h"
 #include <iostream>
 

@@ -1,7 +1,7 @@
 #pragma once
 
+#include <VoxelEngine/engine.h>
 #include <GLFW/glfw3.h>
-#include "../engine.h"
 
 namespace engine::input {
     constexpr u64 KEYS_BUFFER_SIZE = 1056;

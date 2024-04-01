@@ -1,4 +1,4 @@
-#include "input.h"
+#include<VoxelEngine/systems/input.h>
 #include "../../utils/systems_internal.h"
 
 

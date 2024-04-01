@@ -1,16 +1,16 @@
-#include "World.h"
-#include "./voxels/TestChunkGenerator.h"
-#include "./voxels/Chunk.h"
+#include <VoxelEngine/world/world.h>
+#include <VoxelEngine/world/voxels/chunk.h>
+#include "./voxels/test_chunk_generator.h"
 
 namespace engine {
 
-    static TestChunkGenerator testGen = TestChunkGenerator();
+    static test_chunk_generator testGen = test_chunk_generator();
 
-    void World::render(const Camera *cam) {
+    void world::render(const camera *cam) {
         for(const auto& p : chunks) { p.second->getMesh()->draw(cam); }
     }
 
-    Chunk *World::getChunk(i64vec3 chunkPos) {
+    chunk *world::getChunk(i64vec3 chunkPos) {
         auto iter = chunks.find(chunkPos);
         if(iter == chunks.end()) {
             return genChunk(chunkPos, &testGen);
@@ -18,13 +18,13 @@ namespace engine {
         return iter->second;
     }
 
-    Chunk * World::genChunk(i64vec3 chunkPos, IChunkGenerator *gen) {
-        auto* chunk = new Chunk(chunkPos, gen);
+    chunk * world::genChunk(i64vec3 chunkPos, chunk_generator *gen) {
+        auto* chunk = new chunk(chunkPos, gen);
         chunks.insert({chunkPos, chunk});
         return chunk;
     }
 
-    bool World::_vec_comp::operator()(const i64vec3 &l, const i64vec3 &r) const {
+    bool world::_vec_comp::operator()(const i64vec3 &l, const i64vec3 &r) const {
         return l.z == r.z ? (
                 l.y == r.y ? (
                         (l.x < r.x)

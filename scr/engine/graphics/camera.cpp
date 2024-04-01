@@ -1,11 +1,11 @@
-#include "Camera.h"
+#include <VoxelEngine/graphics/camera.h>
 #include <gtx/quaternion.hpp>
 
 namespace engine {
-    Camera::Camera(f32 aspect, i64vec3 uPos, i64vec3 cPos, f32vec3 fPos, vec2 rot)
+    camera::camera(f32 aspect, i64vec3 uPos, i64vec3 cPos, f32vec3 fPos, vec2 rot)
             : aspect(aspect), uPos(uPos), cPos(cPos), fPos(fPos), rot(rot) {}
 
-    mat4 Camera::getView(i64vec3 meshCPos) const {
+    mat4 camera::getView(i64vec3 meshCPos) const {
         return glm::scale(
                 glm::perspective(
                         glm::radians(45.0f),
@@ -27,7 +27,7 @@ namespace engine {
                 {1, 1, -1});
     }
 
-    void Camera::update() {
+    void camera::update() {
         vec3 deltaUPos;
         fPos = glm::modf(fPos, deltaUPos);
         cPos += deltaUPos;

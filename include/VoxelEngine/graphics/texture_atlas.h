@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../engine.h"
+#include <VoxelEngine/engine.h>
 
 namespace engine {
-    class TextureAtlas {
+    class texture_atlas {
         u32 texId = 0;
 
     public:
@@ -18,8 +18,8 @@ namespace engine {
         static void disable();
         [[nodiscard]] u32 getGLTexID() const;
 
-        TextureAtlas(void *data, u32 pixelLen, u32 texWidth, u32 texHeight, TextureAtlas::Channels channels);
-        ~TextureAtlas();
+        texture_atlas(void *data, u32 pixelLen, u32 texWidth, u32 texHeight, texture_atlas::Channels channels);
+        ~texture_atlas();
     };
 
 }

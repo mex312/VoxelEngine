@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../engine.h"
+#include <VoxelEngine/engine.h>
 
 namespace engine {
 
-    class Camera {
+    class camera {
     public:
 
         i64vec3 uPos;
@@ -17,7 +17,7 @@ namespace engine {
 
         void update();
 
-        explicit Camera(f32 aspect, i64vec3 uPos = {0, 0, 0}, i64vec3 cPos = {0, 0, 0}, f32vec3 fPos = {0, 0, 0}, vec2 rot = {0, 0});
+        explicit camera(f32 aspect, i64vec3 uPos = {0, 0, 0}, i64vec3 cPos = {0, 0, 0}, f32vec3 fPos = {0, 0, 0}, vec2 rot = {0, 0});
     };
 
 }

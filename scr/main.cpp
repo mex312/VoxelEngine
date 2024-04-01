@@ -6,7 +6,3 @@ int main() {
 
     return 0;
 }
-
-
-
-// 0bRR000000000000ZZZZZZYYYYYYXXXXXX;

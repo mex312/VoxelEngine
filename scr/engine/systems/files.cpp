@@ -1,5 +1,6 @@
-#include "files.h"
+#include <VoxelEngine/systems/files.h>
 #include <fstream>
+#include <algorithm>
 
 namespace engine::files {
     bool read_bytes(const std::filesystem::path& filename, u8 *data, size_t size) {
@@ -21,7 +22,7 @@ namespace engine::files {
         fin.seekg(0, std::ios_base::beg);
 
         u8 *data = new u8[length];
-        fin.read((char *) data, length);
+        fin.read((char *) data, (i64)length);
         fin.close();
 
         return data;
@@ -31,10 +32,18 @@ namespace engine::files {
         size_t size;
         u8 *data = read_bytes(filename, size);
 
-        if (data == nullptr) throw std::runtime_error("could not read file '" + filename.string() + "'");
+        if (data == nullptr) throw std::runtime_error("Could not read file '" + filename.string() + "'");
 
         std::string out((char *) data, size);
         delete[] data;
+        return out;
+    }
+
+    std::vector<std::filesystem::path> get_all_files(const std::filesystem::path &dirname) {
+        if(!is_directory(dirname)) throw std::runtime_error("'" + dirname.generic_string() + "' is not a directory");
+        auto iter = std::filesystem::directory_iterator(dirname);
+        std::vector<std::filesystem::path> out;
+        std::copy_if(begin(iter), end(iter), std::back_inserter(out), [](const std::filesystem::path& p){return !is_directory(p);});
         return out;
     }
 }

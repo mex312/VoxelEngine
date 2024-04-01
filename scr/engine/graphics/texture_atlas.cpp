@@ -1,8 +1,8 @@
-#include "TextureAtlas.h"
+#include <VoxelEngine/graphics/texture_atlas.h>
 #include "../../external/glad.h"
 
 namespace engine {
-    TextureAtlas::TextureAtlas(void *data, u32 pixelLen, u32 texWidth, u32 texHeight, TextureAtlas::Channels channels) {
+    texture_atlas::texture_atlas(void *data, u32 pixelLen, u32 texWidth, u32 texHeight, texture_atlas::Channels channels) {
         u32 pixelSize;
         u32 glFormat;
         u32 glType;
@@ -45,18 +45,18 @@ namespace engine {
         glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
     }
 
-    TextureAtlas::~TextureAtlas() {
+    texture_atlas::~texture_atlas() {
         glDeleteTextures(1, &texId);
     }
 
-    u32 TextureAtlas::getGLTexID() const {
+    u32 texture_atlas::getGLTexID() const {
         return texId;
     }
 
-    void TextureAtlas::enable() const {
+    void texture_atlas::enable() const {
         glBindTexture(GL_TEXTURE_2D_ARRAY, texId);
     }
-    void TextureAtlas::disable() {
+    void texture_atlas::disable() {
         glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
     }
 } // engine

@@ -1,14 +1,14 @@
 #pragma once
-#include "../engine.h"
 
+#include <VoxelEngine/engine.h>
 #include <vector>
 
 namespace engine {
-    class Chunk;
-    class Camera;
+    class chunk;
+    class camera;
 
-    class ChunkMesh {
-        friend class Chunk;
+    class chunk_mesh {
+        friend class chunk;
 
         struct chunk_vertex {
             u32 data;
@@ -24,18 +24,18 @@ namespace engine {
 
         std::vector<chunk_vertex> vertexBuffers[6];
 
-        Chunk* chunk;
+        chunk* chunk;
 
 
         void update();
 
     public:
 
-        explicit ChunkMesh(Chunk* chunk);
+        explicit chunk_mesh(chunk* chunk);
 
-        ~ChunkMesh();
+        ~chunk_mesh();
 
-        void draw(const Camera *cam) const noexcept;
+        void draw(const camera *cam) const noexcept;
 
     };
 }

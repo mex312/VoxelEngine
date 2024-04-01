@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../engine.h"
+#include <VoxelEngine/engine.h>
 #include <string>
 #include <filesystem>
+#include <vector>
+
 namespace engine {
     namespace json {
         class JObject;
@@ -16,5 +18,7 @@ namespace engine {
         extern std::string read_string(const std::filesystem::path& filename);
 
         extern json::JObject *read_json(const std::filesystem::path& filename);
+
+        extern std::vector<std::filesystem::path> get_all_files(const std::filesystem::path& dirname);
     }
 }

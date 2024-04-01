@@ -1,16 +1,18 @@
-#include <iostream>
-#include "./engine.h"
+#include <VoxelEngine/engine.h>
+#include <GLFW/glfw3.h>
+#include <VoxelEngine/systems/input.h>
+#include <VoxelEngine/systems/time.h>
+#include <VoxelEngine/systems/files.h>
+#include <VoxelEngine/systems/storage.h>
+#include <VoxelEngine/world/voxels/chunk.h>
+#include <VoxelEngine/graphics/camera.h>
+#include <VoxelEngine/world/world.h>
+#include "./world/voxels/test_chunk_generator.h"
+#include "./world/voxels/block_bases/generic_solid.h"
 #include "../utils/systems_internal.h"
 #include "../utils/engine_internal.h"
 #include "../external/glad.h"
-#include "GLFW/glfw3.h"
-#include "./systems/input.h"
-#include "./systems/time.h"
-#include "./world/voxels/Chunk.h"
-#include "./graphics/Camera.h"
-#include "./world/voxels/TestChunkGenerator.h"
-#include "./world/World.h"
-#include <gtx/quaternion.hpp>
+#include <iostream>
 
 extern "C" {
 [[gnu::dllexport]] uint8_t NvOptimusEnablement = 0x00000001;
@@ -21,7 +23,7 @@ namespace engine {
     static GLFWwindow *_window = nullptr;
 
 
-    void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    void framebuffer_size_callback(GLFWwindow*, int width, int height) {
         glViewport(0, 0, width, height);
 
         _screen_aspect = (float) width / (float) height;
@@ -52,7 +54,8 @@ namespace engine {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwSwapInterval(0);
+        //glfwSwapInterval(0);
+        glfwSwapInterval(144);
 
         time::init();
         input::init(_window);
@@ -62,10 +65,42 @@ namespace engine {
     }
 
 
-
-
     void start() {
         init();
+
+        auto vec = files::get_all_files("../res/textures");
+
+        for (auto &f: vec) {
+            std::cout << f.filename() << std::endl;
+        }
+
+        storage::reg_block_base(new generic_solid(
+                {
+                        "base:stone_bricks",
+                        "base:stone_bricks",
+                        "base:stone_bricks",
+                        "base:stone_bricks",
+                        "base:stone_bricks",
+                        "base:stone_bricks"
+                }), "base:stone_bricks");
+        storage::reg_block_base(new generic_solid(
+                {
+                        "base:dirt",
+                        "base:dirt",
+                        "base:dirt",
+                        "base:dirt",
+                        "base:dirt",
+                        "base:dirt"
+                }), "base:dirt");
+        storage::reg_block_base(new generic_solid(
+                {
+                        "base:grass_side",
+                        "base:grass_side",
+                        "base:grass_side",
+                        "base:grass_side",
+                        "base:grass_top",
+                        "base:dirt"
+                }), "base:grass");
 
         f64 elapsed = 0.0;
         u64 frames = 0;
@@ -73,22 +108,22 @@ namespace engine {
         constexpr float SPEED = 10.0f;
         constexpr float SENSITIVITY = 0.005f;
 
-        auto cam = Camera(0, {0, 0, 0});
+        auto cam = camera(0, {0, 0, 0});
 
-        auto world = World();
+        auto world = world();
 
-        IChunkGenerator* gen = new TestChunkGenerator();
-        for(u8 z = 0; z < 8; ++z) for(u8 x = 0; x < 8; ++x) world.genChunk({x, 0, z}, gen);
+        chunk_generator *gen = new test_chunk_generator();
+        for (u8 z = 0; z < 8; ++z) for (u8 x = 0; x < 8; ++x) world.genChunk({x, 0, z}, gen);
 
         f32 blockTimer = 0;
-        uvec3 posToPlace = {0,0,0};
+        uvec3 posToPlace = {0, 0, 0};
 
-        while(!glfwWindowShouldClose(_window)) {
+        while (!glfwWindowShouldClose(_window)) {
             input::update();
             time::update();
 
-            elapsed += time::deltaTimeD();
-            blockTimer += time::deltaTime();
+            elapsed += time::delta_time_d();
+            blockTimer += time::delta_time();
             frames++;
             cam.aspect = _screen_aspect;
 
@@ -110,17 +145,17 @@ namespace engine {
             mat4 motionRotation = glm::rotate(mat4(1), -cam.rot.x, vec3(0.0f, 1.0f, 0.0f));
 
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_W)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_S)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_A)))
-                cam.fPos += glm::vec3(glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_D)))
-                cam.fPos += glm::vec3(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_LEFT_SHIFT)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, -1.0f, 0.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(0.0f, -1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_SPACE)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * SPEED * time::deltaTime() * motionRotation);
+                cam.fPos += glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
 
             cam.update();
 

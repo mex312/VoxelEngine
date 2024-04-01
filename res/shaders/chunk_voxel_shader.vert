@@ -4,12 +4,14 @@ layout (location = 1) in uint inst_data;
 layout (location = 2) in uint inst_tex;
 
 out vec2 uv;
-out int texID;
+out uint texID;
 
 uniform mat4 MVP;
 
 void main()
 {
+    texID = inst_tex;
+
     uvec3 q_pos = uvec3(quad_data & 1u, (quad_data >> 1u) & 1u, 0);
     uv = q_pos.xy;
 
@@ -17,7 +19,8 @@ void main()
 
     uint id = gl_DrawID;
 
-    rotation = id == 5 ? (rotation + 2u) & 3u : rotation;
+//    rotation = id == 5 ? (rotation + 2u) & 3u : rotation;
+    rotation = rotation + 2u & 3u;
 
 
     q_pos = ((rotation & 2u) > 0) ? (uvec3(1, 1, 0) ^ q_pos) : q_pos;
