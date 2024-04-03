@@ -6,9 +6,9 @@ namespace engine {
         return texes;
     }
 
-    generic_solid::generic_solid(const std::array<u32, 6>& texes) : block_base(true), texes(texes) {}
+    generic_solid::generic_solid(const std::array<u32, 6>& texes) : IBlockBase(true, true), texes(texes) {}
 
-    generic_solid::generic_solid(const std::array<game_id, 6> &texes) : block_base(true), texes{
+    generic_solid::generic_solid(const std::array<game_id, 6> &texes) : IBlockBase(true, true), texes{
         storage::get_texture_id(texes[0]),
         storage::get_texture_id(texes[1]),
         storage::get_texture_id(texes[2]),

@@ -2,10 +2,10 @@
 #include <VoxelEngine/systems/storage.h>
 #include <VoxelEngine/graphics/chunk_mesh.h>
 #include <VoxelEngine/graphics/shader.h>
-#include <VoxelEngine/graphics/camera.h>
+#include <VoxelEngine/graphics/Camera.h>
 #include <VoxelEngine/graphics/texture_atlas.h>
-#include <VoxelEngine/world/voxels/chunk.h>
-#include <VoxelEngine/world/voxels/block_base.h>
+#include <VoxelEngine/world/voxels/Chunk.h>
+#include <VoxelEngine/world/voxels/IBlockBase.h>
 #include "../../external/glad.h"
 
 namespace engine {
@@ -28,7 +28,7 @@ namespace engine {
     };
 
 
-    chunk_mesh::chunk_mesh(engine::chunk *chunk) : chunk(chunk), vao(0), vbo(0), idb(0), vboCapacity(0) {
+    chunk_mesh::chunk_mesh(engine::Chunk *_chunk) : _chunk(_chunk), vao(0), vbo(0), idb(0), vboCapacity(0) {
         glGenVertexArrays(1, &vao);
         glGenBuffers(2, &vbo);
 
@@ -73,27 +73,27 @@ namespace engine {
         for (u32 z = 0; z < CHUNK_SIDE; ++z)
             for (u32 y = 0; y < CHUNK_SIDE; ++y)
                 for (u32 x = 0; x < CHUNK_SIDE; ++x) {
-                    voxel now = chunk->get({x, y, z});
+                    voxel now = _chunk->get({x, y, z});
                     if (!now.block) continue;
                     if (!now.block->isVisible) continue;
 
                     auto texes = now.block->getTexes(now);
-                    voxel v = chunk->get({x, y, z - 1});
+                    voxel v = _chunk->get({x, y, z - 1});
                     if (!v.data) vertexBuffers[SOUTH].push_back({x | (y << 6) | (z << 12), texes[SOUTH]});
 
-                    v = chunk->get({x + 1, y, z});
+                    v = _chunk->get({x + 1, y, z});
                     if (!v.data) vertexBuffers[WEST].push_back({x | (y << 6) | (z << 12), texes[WEST]});
 
-                    v = chunk->get({x, y, z + 1});
+                    v = _chunk->get({x, y, z + 1});
                     if (!v.data) vertexBuffers[NORTH].push_back({x | (y << 6) | (z << 12), texes[NORTH]});
 
-                    v = chunk->get({x - 1, y, z});
+                    v = _chunk->get({x - 1, y, z});
                     if (!v.data) vertexBuffers[EAST].push_back({x | (y << 6) | (z << 12), texes[EAST]});
 
-                    v = chunk->get({x, y + 1, z});
+                    v = _chunk->get({x, y + 1, z});
                     if (!v.data) vertexBuffers[UP].push_back({x | (y << 6) | (z << 12), texes[UP]});
 
-                    v = chunk->get({x, y - 1, z});
+                    v = _chunk->get({x, y - 1, z});
                     if (!v.data) vertexBuffers[DOWN].push_back({x | (y << 6) | (z << 12), texes[DOWN]});
                 }
 
@@ -141,7 +141,7 @@ namespace engine {
         glBindVertexArray(0);
     }
 
-    void chunk_mesh::draw(const camera *cam) const noexcept {
+    void chunk_mesh::draw(const Camera *cam) const noexcept {
         if (!(vertexBuffers[0].size() +
         vertexBuffers[1].size() +
         vertexBuffers[2].size() +
@@ -155,7 +155,7 @@ namespace engine {
         }
 
         shader->use();
-        glUniformMatrix4fv(glGetUniformLocation(shader->id, "MVP"), 1, false, &cam->getView(chunk->pos)[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shader->id, "MVP"), 1, false, &cam->getView({{}, {}, _chunk->pos})[0][0]);
         glUniform1i(glGetUniformLocation(shader->id, "tex"), 0);
 
         glBindTexture(GL_TEXTURE_2D_ARRAY, storage::get_atlas()->getGLTexID());

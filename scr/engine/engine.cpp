@@ -4,9 +4,9 @@
 #include <VoxelEngine/systems/time.h>
 #include <VoxelEngine/systems/files.h>
 #include <VoxelEngine/systems/storage.h>
-#include <VoxelEngine/world/voxels/chunk.h>
-#include <VoxelEngine/graphics/camera.h>
-#include <VoxelEngine/world/world.h>
+#include <VoxelEngine/world/voxels/Chunk.h>
+#include <VoxelEngine/graphics/Camera.h>
+#include <VoxelEngine/world/World.h>
 #include "./world/voxels/test_chunk_generator.h"
 #include "./world/voxels/block_bases/generic_solid.h"
 #include "../utils/systems_internal.h"
@@ -102,18 +102,28 @@ namespace engine {
                         "base:dirt"
                 }), "base:grass");
 
+        storage::reg_block_base(new generic_solid(
+                {
+                        "base:stone",
+                        "base:stone",
+                        "base:stone",
+                        "base:stone",
+                        "base:stone",
+                        "base:stone"
+                }), "base:stone");
+
         f64 elapsed = 0.0;
         u64 frames = 0;
 
         constexpr float SPEED = 10.0f;
         constexpr float SENSITIVITY = 0.005f;
 
-        auto cam = camera(0, {0, 0, 0});
+        auto cam = Camera(_screen_aspect);
 
-        auto world = world();
+        auto overworld = World();
 
-        chunk_generator *gen = new test_chunk_generator();
-        for (u8 z = 0; z < 8; ++z) for (u8 x = 0; x < 8; ++x) world.genChunk({x, 0, z}, gen);
+        IChunkGenerator *gen = new test_chunk_generator();
+        for (u8 z = 0; z < 8; ++z) for (u8 x = 0; x < 8; ++x) overworld.genChunk({x, 0, z}, gen);
 
         f32 blockTimer = 0;
         uvec3 posToPlace = {0, 0, 0};
@@ -145,21 +155,21 @@ namespace engine {
             mat4 motionRotation = glm::rotate(mat4(1), -cam.rot.x, vec3(0.0f, 1.0f, 0.0f));
 
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_W)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_S)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(0.0f, 0.0f, -1.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_A)))
-                cam.fPos += glm::vec3(glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(-1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_D)))
-                cam.fPos += glm::vec3(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_LEFT_SHIFT)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, -1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(0.0f, -1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_SPACE)))
-                cam.fPos += glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+                cam.pos += glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
 
             cam.update();
 
-            world.render(&cam);
+            overworld.render(&cam);
 
             GLenum err = glGetError();
 

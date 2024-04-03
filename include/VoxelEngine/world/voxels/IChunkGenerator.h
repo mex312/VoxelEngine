@@ -1,14 +1,14 @@
 #pragma once
 
-#include <VoxelEngine/world/voxels/voxel.h>
+#include <VoxelEngine/world/World.h>
 
 namespace engine {
-    class chunk;
+    class Chunk;
 
-    class chunk_generator {
+    class IChunkGenerator {
     public:
         virtual voxel getVoxel(i64vec3 chunkPos, u8vec3 voxelPos) = 0;
-        virtual void fillChunk(chunk* chunk) = 0;
+        virtual void fillChunk(Chunk* chunk) = 0;
 
 //        virtual ~IChunkGenerator() = 0;
     };

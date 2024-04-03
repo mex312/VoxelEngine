@@ -4,11 +4,11 @@
 #include <vector>
 
 namespace engine {
-    class chunk;
-    class camera;
+    class Chunk;
+    class Camera;
 
     class chunk_mesh {
-        friend class chunk;
+        friend class Chunk;
 
         struct chunk_vertex {
             u32 data;
@@ -24,18 +24,18 @@ namespace engine {
 
         std::vector<chunk_vertex> vertexBuffers[6];
 
-        chunk* chunk;
+        Chunk* _chunk;
 
 
         void update();
 
     public:
 
-        explicit chunk_mesh(chunk* chunk);
+        explicit chunk_mesh(Chunk* _chunk);
 
         ~chunk_mesh();
 
-        void draw(const camera *cam) const noexcept;
+        void draw(const Camera *cam) const noexcept;
 
     };
 }

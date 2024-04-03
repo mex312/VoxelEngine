@@ -15,17 +15,18 @@ add_library(vox_engine STATIC
         scr/engine/systems/files.cpp
         scr/engine/graphics/shader.cpp
         scr/engine/graphics/chunk_mesh.cpp
-        scr/engine/world/voxels/chunk.cpp
+        scr/engine/world/voxels/Chunk.cpp
         scr/engine/world/voxels/voxel.cpp
-        scr/engine/graphics/camera.cpp
-        scr/engine/world/world.cpp
+        scr/engine/graphics/Camera.cpp
+        scr/engine/world/World.cpp
         scr/engine/world/voxels/test_chunk_generator.cpp
         scr/engine/world/voxels/block_bases/generic_solid.cpp
         scr/engine/world/voxels/block_bases/air.cpp
-        scr/engine/world/voxels/block_base.cpp
+        scr/engine/world/voxels/IBlockBase.cpp
         scr/engine/systems/storage.cpp
         scr/external/stb_image.cpp
         scr/engine/graphics/texture_atlas.cpp
+        scr/engine/world/voxels/VoxelRay.cpp
 )
 
 target_link_libraries(VoxelGame vox_engine)

@@ -18,7 +18,7 @@ struct std::hash<engine::game_id> {
 
 namespace engine::storage {
 
-    static std::vector<const block_base*> _blockBases;
+    static std::vector<const IBlockBase*> _blockBases;
     static std::unordered_map<game_id, u32> _blockBaseIDs;
     static std::unordered_map<game_id, u32> _textureIDs;
     static texture_atlas* _atlas;
@@ -70,12 +70,12 @@ namespace engine::storage {
     }
 
 
-    const block_base * get_block_base(u32 id) {
+    const IBlockBase * get_block_base(u32 id) {
         if(id >= _blockBases.size()) return nullptr;
         return _blockBases[id];
     }
 
-    const block_base * get_block_base(const game_id& id) {
+    const IBlockBase * get_block_base(const game_id& id) {
         auto iter = _blockBaseIDs.find(id);
         if(iter == _blockBaseIDs.end()) return nullptr;
         return _blockBases[iter->second];
@@ -85,7 +85,7 @@ namespace engine::storage {
         return _atlas;
     }
 
-    void reg_block_base(const block_base *blockBase, const game_id &id) {
+    void reg_block_base(const IBlockBase *blockBase, const game_id &id) {
         _blockBaseIDs.emplace(id, _blockBases.size());
         _blockBases.push_back(blockBase);
     }

@@ -6,7 +6,7 @@ namespace engine {
         return {0, 0, 0, 0, 0, 0};
     }
 
-    air::air() : block_base(false) {}
+    air::air() : IBlockBase(false, false) {}
 
     air::~air() = default;
 }

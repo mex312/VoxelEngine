@@ -1,11 +1,11 @@
 #pragma once
 
-#include <VoxelEngine/world/voxels/block_base.h>
+#include <VoxelEngine/world/voxels/IBlockBase.h>
 #include <VoxelEngine/systems/storage.h>
 
 namespace engine {
 
-    class generic_solid : public block_base {
+    class generic_solid : public IBlockBase {
         std::array<u32, 6> texes;
 
     public:

@@ -6,7 +6,7 @@
 namespace engine {
     using namespace glm;
 
-    enum side {
+    enum Side {
         // z+
         SOUTH,
         // x-

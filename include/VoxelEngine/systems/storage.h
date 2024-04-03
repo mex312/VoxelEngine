@@ -4,7 +4,7 @@
 #include <string>
 
 namespace engine {
-    class block_base;
+    class IBlockBase;
     class texture_atlas;
 
     struct game_id {
@@ -20,11 +20,11 @@ namespace engine {
 
     namespace storage {
 
-        const block_base * get_block_base(u32 id);
-        const block_base * get_block_base(const game_id& id);
+        const IBlockBase * get_block_base(u32 id);
+        const IBlockBase * get_block_base(const game_id& id);
         u32 get_texture_id(const game_id& id);
 
-        void reg_block_base(const block_base *blockBase, const game_id &id);
+        void reg_block_base(const IBlockBase *blockBase, const game_id &id);
 
         const texture_atlas * get_atlas();
     }
