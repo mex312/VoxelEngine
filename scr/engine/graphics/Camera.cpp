@@ -29,4 +29,17 @@ namespace engine {
     }
 
     Camera::Camera(f32 aspect, const position &pos, vec2 rot) : aspect(aspect), pos(pos), rot(rot) {}
+
+    mat4 Camera::getRotation() const {
+        return glm::rotate(
+                glm::rotate(
+                        glm::mat4(1),
+                        rot.y,
+                        glm::vec3(
+                                -1.0f, 0.0f, 0.0f)
+                ),
+                rot.x,
+                vec3(0.0f, -1.0f, 0.0f)
+        );
+    }
 }

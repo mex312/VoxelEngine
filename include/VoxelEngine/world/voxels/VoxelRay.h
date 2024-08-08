@@ -2,22 +2,26 @@
 
 #include <VoxelEngine/engine.h>
 #include <VoxelEngine/world/World.h>
+#include <memory>
 
 namespace engine {
     struct voxel_collision {
         position voxPos = {};
         position collPos = {};
         voxel vox = {};
+        Side side = NORTH;
     };
 
     class VoxelRay {
     public:
 
-        World* world;
+        const World* const world;
 
-        position start;
-        position end;
+        const position start;
+        const position end;
 
-        voxel_collision * cast() const; // nullable
+        [[nodiscard]] std::unique_ptr<voxel_collision> cast() const; // nullable
+
+        VoxelRay(World* world, const position& start, const position& end);
     };
 }

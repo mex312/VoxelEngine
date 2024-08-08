@@ -27,6 +27,7 @@ add_library(vox_engine STATIC
         scr/external/stb_image.cpp
         scr/engine/graphics/texture_atlas.cpp
         scr/engine/world/voxels/VoxelRay.cpp
+        scr/engine/graphics/ui/View.cpp
 )
 
 target_link_libraries(VoxelGame vox_engine)

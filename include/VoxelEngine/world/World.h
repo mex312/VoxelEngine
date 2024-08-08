@@ -56,8 +56,8 @@ namespace engine {
 
         Chunk *genChunk(i64vec3 chunkPos, IChunkGenerator *gen);
 
-        Chunk *getChunk(i64vec3 chunkPos);
-        Chunk *getChunk(position pos);
+        [[nodiscard]] Chunk *getChunk(i64vec3 chunkPos) const;
+        [[nodiscard]] Chunk *getChunk(position pos) const;
     };
 
 }

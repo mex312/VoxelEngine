@@ -14,6 +14,8 @@ namespace engine {
 
         [[nodiscard]] mat4 getView(position meshPos) const;
 
+        [[nodiscard]] mat4 getRotation() const;
+
         void update();
 
         explicit Camera(f32 aspect, const position& pos = vec3{0.0f, 0.0f, 0.0f}, vec2 rot = {0, 0});

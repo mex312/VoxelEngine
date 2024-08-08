@@ -7,8 +7,10 @@
 #include <VoxelEngine/world/voxels/Chunk.h>
 #include <VoxelEngine/graphics/Camera.h>
 #include <VoxelEngine/world/World.h>
+#include <VoxelEngine/world/voxels/VoxelRay.h>
 #include "./world/voxels/test_chunk_generator.h"
 #include "./world/voxels/block_bases/generic_solid.h"
+#include "./world/voxels/block_bases/air.h"
 #include "../utils/systems_internal.h"
 #include "../utils/engine_internal.h"
 #include "../external/glad.h"
@@ -54,8 +56,8 @@ namespace engine {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glfwSwapInterval(0);
-        glfwSwapInterval(144);
+        glfwSwapInterval(0);
+//        glfwSwapInterval(144);
 
         time::init();
         input::init(_window);
@@ -73,6 +75,8 @@ namespace engine {
         for (auto &f: vec) {
             std::cout << f.filename() << std::endl;
         }
+
+        storage::reg_block_base(new air(), "base:air");
 
         storage::reg_block_base(new generic_solid(
                 {
@@ -128,6 +132,8 @@ namespace engine {
         f32 blockTimer = 0;
         uvec3 posToPlace = {0, 0, 0};
 
+        bool isMouseHidden = false;
+
         while (!glfwWindowShouldClose(_window)) {
             input::update();
             time::update();
@@ -166,6 +172,48 @@ namespace engine {
                 cam.pos += glm::vec3(glm::vec4(0.0f, -1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
             if (input::pressed(glfwGetKeyScancode(GLFW_KEY_SPACE)))
                 cam.pos += glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * SPEED * time::delta_time() * motionRotation);
+
+            auto start = cam.pos;
+            auto end = start + vec3(vec4(0, 0, 1, 1) * 15.0f * cam.getRotation());
+
+            auto ray = VoxelRay{&overworld, start, end};
+
+            auto collision = ray.cast();
+
+            if(input::just_pressed(glfwGetKeyScancode(GLFW_KEY_F))) isMouseHidden = !isMouseHidden;
+            glfwSetInputMode(_window, GLFW_CURSOR, isMouseHidden ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+
+            if(collision != nullptr) {
+//                std::cout << collision->vox.block->isSolid << std::endl;
+//                std::cout << collision->collPos.single().x << ' ' << collision->collPos.single().y << ' ' << collision->collPos.single().z << std::endl;
+                if(input::just_pressed(GLFW_MOUSE_BUTTON_1 + input::MOUSE_BUTTONS_OFFSET)) overworld.getChunk(collision->voxPos)->set(collision->voxPos.block, {0, storage::get_block_base("base:air")});
+                if(input::just_pressed(GLFW_MOUSE_BUTTON_2 + input::MOUSE_BUTTONS_OFFSET)) {
+                    auto delta = vec3();
+
+                    switch (collision->side) {
+                        case SOUTH:
+                            delta = {0, 0, -1};
+                            break;
+                        case WEST:
+                            delta = {-1, 0, 0};
+                            break;
+                        case NORTH:
+                            delta = {0, 0, 1};
+                            break;
+                        case EAST:
+                            delta = {1, 0, 0};
+                            break;
+                        case UP:
+                            delta = {0, 1, 0};
+                            break;
+                        case DOWN:
+                            delta = {0, -1, 0};
+                            break;
+                    }
+
+                    overworld.getChunk(collision->voxPos + delta)->set(collision->voxPos.block + (ivec3)delta, {0, storage::get_block_base("base:stone_bricks")});
+                }
+            }
 
             cam.update();
 

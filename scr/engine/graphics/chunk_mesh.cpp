@@ -79,22 +79,22 @@ namespace engine {
 
                     auto texes = now.block->getTexes(now);
                     voxel v = _chunk->get({x, y, z - 1});
-                    if (!v.data) vertexBuffers[SOUTH].push_back({x | (y << 6) | (z << 12), texes[SOUTH]});
+                    if (!v.block->isSolid) vertexBuffers[SOUTH].push_back({x | (y << 6) | (z << 12), texes[SOUTH]});
 
                     v = _chunk->get({x + 1, y, z});
-                    if (!v.data) vertexBuffers[WEST].push_back({x | (y << 6) | (z << 12), texes[WEST]});
+                    if (!v.block->isSolid) vertexBuffers[WEST].push_back({x | (y << 6) | (z << 12), texes[WEST]});
 
                     v = _chunk->get({x, y, z + 1});
-                    if (!v.data) vertexBuffers[NORTH].push_back({x | (y << 6) | (z << 12), texes[NORTH]});
+                    if (!v.block->isSolid) vertexBuffers[NORTH].push_back({x | (y << 6) | (z << 12), texes[NORTH]});
 
                     v = _chunk->get({x - 1, y, z});
-                    if (!v.data) vertexBuffers[EAST].push_back({x | (y << 6) | (z << 12), texes[EAST]});
+                    if (!v.block->isSolid) vertexBuffers[EAST].push_back({x | (y << 6) | (z << 12), texes[EAST]});
 
                     v = _chunk->get({x, y + 1, z});
-                    if (!v.data) vertexBuffers[UP].push_back({x | (y << 6) | (z << 12), texes[UP]});
+                    if (!v.block->isSolid) vertexBuffers[UP].push_back({x | (y << 6) | (z << 12), texes[UP]});
 
                     v = _chunk->get({x, y - 1, z});
-                    if (!v.data) vertexBuffers[DOWN].push_back({x | (y << 6) | (z << 12), texes[DOWN]});
+                    if (!v.block->isSolid) vertexBuffers[DOWN].push_back({x | (y << 6) | (z << 12), texes[DOWN]});
                 }
 
         u32 bLen =

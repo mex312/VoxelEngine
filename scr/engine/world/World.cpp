@@ -10,10 +10,10 @@ namespace engine {
         for(const auto& p : chunks) { p.second->getMesh()->draw(cam); }
     }
 
-    Chunk *World::getChunk(i64vec3 chunkPos) {
+    Chunk *World::getChunk(i64vec3 chunkPos) const {
         auto iter = chunks.find(chunkPos);
         if(iter == chunks.end()) {
-            return genChunk(chunkPos, &testGen);
+            return nullptr;
         }
         return iter->second;
     }
@@ -24,8 +24,8 @@ namespace engine {
         return _chunk;
     }
 
-    Chunk *World::getChunk(position pos) {
-        getChunk(pos.chunk);
+    Chunk *World::getChunk(position pos) const {
+        return getChunk(pos.chunk);
     }
 
     bool World::_vec_comp::operator()(const i64vec3 &l, const i64vec3 &r) const {

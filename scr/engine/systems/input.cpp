@@ -1,5 +1,6 @@
 #include<VoxelEngine/systems/input.h>
 #include "../../utils/systems_internal.h"
+#include <iostream>
 
 
 namespace engine::input {
@@ -46,8 +47,10 @@ namespace engine::input {
 
     void mouseButtonCallback(GLFWwindow *window, i32 button, i32 action, i32 mods) {
         _keys[button + MOUSE_BUTTONS_OFFSET] = action;
-        _keyFrames[button + MOUSE_BUTTONS_OFFSET] = (action & 1) ? _frame : _keyFrames[button +
+        _keyFrames[button + MOUSE_BUTTONS_OFFSET] = (action & 1) ? _frame + 1 : _keyFrames[button +
                                                                                        MOUSE_BUTTONS_OFFSET];
+
+//        std::cout << button << std::endl;
     }
 
 
